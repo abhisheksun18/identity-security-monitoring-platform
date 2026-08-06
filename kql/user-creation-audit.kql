@@ -1,0 +1,6 @@
+// Detects new local user account creation on theb monitored server.
+// Establishes a baseline of when and by whom new accounts are created.
+Event
+| where EventID == 4720
+| project TimeGenerated, Computer, EventID, RenderedDescription
+| order by TimeGenerated desc

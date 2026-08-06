@@ -1,0 +1,7 @@
+// Detects accounts added to a security-enabled local group (Administrators)
+// A newly created account being escalated to admin shortlyb after creates a
+// a typical privilege creep / interal threat indicator.
+Event
+| where EventID == 4732
+| project TimeGenerated, Computer, EventID, RenderedDescription
+| order by TimeGenerated desc
