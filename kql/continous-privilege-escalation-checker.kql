@@ -1,0 +1,14 @@
+// Flags privilege creep: A new account gets added, 
+// then someone gives the account the Administrators role 
+// within 30 minutes, on the same machine
+let creations = Event
+    | where EventID = 4720
+    | project CreationTime = TimeGenerated, Computer;
+let escalations = Event
+    | where EventID = 4732
+    | project EscalationTime = TimeGenerated, Computer;
+creations
+| join kind=inner (escalations) on Computer
+| where EscalationTime - CreationTime between (0min .. 30min)
+| project Computer, CreationTime, EscalationTime, TimeToEscalation = EscalationTime - CreationTime
+| order by EscalationTime desc
